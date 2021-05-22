@@ -1,6 +1,7 @@
 const input = document.getElementById('task__title');
 const form = document.getElementById('task__form');
 const tasksList = document.getElementById('tasks__list');
+const deleteCompleted = document.getElementById('delete__completed');
 let counter = document.getElementById('counter');
 counter.innerHTML = 0;
 
@@ -13,7 +14,7 @@ class Task {
     this.title = title;
   }
 }
-
+// <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
 // Create task
 
 form.onsubmit = (event) => {
@@ -33,6 +34,81 @@ const displayTasks = () => {
   tasksList.innerHTML = null;
   tasksArray.forEach(task => {
     const div = document.createElement('div');
+    const input = document.createElement('input')
+    const span = document.createElement('span');
+    const btnDelete = document.createElement('button');
+    const btnComplete = document.createElement('button');
+    btnDelete.appendChild(document.createTextNode('delete'));
+    btnComplete.appendChild(document.createTextNode('complete'));
+    input.type = 'checkbox';
+    input.classList.add('form-check-input');
+
+    div.classList.add('border', 'rounded', 'd-flex', 'justify-content-between', 'p-2', 'mt-2');
+    btnComplete.classList.add('btn', 'btn-sm', 'btn-success');
+    btnDelete.classList.add('btn', 'btn-sm', 'btn-danger');
+    span.appendChild(document.createTextNode(task.title))
+    div.appendChild(input);
+    div.classList.add('task__container')
+    div.appendChild(span);
+    div.appendChild(btnComplete);
+    div.appendChild(btnDelete);
+    div.id = task.id;
+    if(task.isCompleted === true) {
+      span.classList.add('completed');
+    }
+
+    tasksList.appendChild(div);
+  });
+}
+
+// Delete and Complete task
+
+const deleteTask = (event) => {
+  if(event.target.innerHTML==="delete") {
+    const index = tasksArray.findIndex(el => +event.target.parentNode.id === el.id);
+    tasksArray.splice(index, 1);
+    tasksList.removeChild(event.target.parentNode);
+    counter.innerHTML = tasksArray.length;
+  } else if(event.target.innerHTML==="complete") {
+    const index = tasksArray.findIndex(el => +event.target.parentNode.id === el.id);
+    tasksArray[index].isCompleted = true;
+    deleteCompleted.classList.remove('d-none');
+    deleteCompleted.classList.add('d-block','btn','btn-outline-secondary','btn-sm');
+    displayTasks();
+  } else if(event.target.type === 'checkbox') {
+    if(event.target.checked) {
+      const index = tasksArray.findIndex(el => +event.target.parentNode.id === el.id);
+      tasksArray[index].isCompleted = true;
+      deleteCompleted.classList.remove('d-none');
+      deleteCompleted.classList.add('d-block','btn','btn-outline-secondary','btn-sm');
+    } else {
+      const index = tasksArray.findIndex(el => +event.target.parentNode.id === el.id);
+      tasksArray[index].isCompleted = false;
+    }
+  }
+}
+
+tasksList.onclick = deleteTask;
+
+
+// Changing title
+
+const changeTaskTitle = (event) => {
+  console.log(event.target)
+}
+
+tasksList.childNodes.ondblclick = changeTaskTitle;
+
+
+// Filtering tasks
+
+const completedTasks = document.getElementById('filter__completed');
+
+completedTasks.onclick = () => {
+  const filteredArray = tasksArray.filter(task => task.isCompleted === true);
+  tasksList.innerHTML = null;
+  filteredArray.forEach(task => {
+    const div = document.createElement('div');
     const btnDelete = document.createElement('button');
     const btnComplete = document.createElement('button');
     btnDelete.appendChild(document.createTextNode('delete'));
@@ -47,24 +123,62 @@ const displayTasks = () => {
     div.id = task.id;
 
     tasksList.appendChild(div);
-  });
+  })
 }
 
-// Delete task
+const activeTasks = document.getElementById('filter__active');
 
-const deleteTask = (event) => {
-  if(event.target.innerHTML==="delete") {
-    console.log(event.target.parentNode.id);
-    const index = tasksArray.findIndex(el => event.target.parentNode.id === el.id);
-    tasksArray.splice(index, 1);
-    tasksList.removeChild(event.target.parentNode);
-    counter.innerHTML = tasksArray.length;
-    console.log(tasksArray);
-  } else if(event.target.innerHTML==="complete") {
-    console.log(event.target.parentNode.id);
+activeTasks.onclick = () => {
+  const filteredArray = tasksArray.filter(task => task.isCompleted === false);
+  tasksList.innerHTML = null;
+  filteredArray.forEach(task => {
+    const div = document.createElement('div');
+    const btnDelete = document.createElement('button');
+    const btnComplete = document.createElement('button');
+    btnDelete.appendChild(document.createTextNode('delete'));
+    btnComplete.appendChild(document.createTextNode('complete'));
 
-    console.log(tasksArray);
-  }
+    div.classList.add('border', 'rounded', 'd-flex', 'justify-content-between', 'p-2', 'mt-2');
+    btnComplete.classList.add('btn', 'btn-sm', 'btn-success');
+    btnDelete.classList.add('btn', 'btn-sm', 'btn-danger');
+    div.appendChild(document.createTextNode(task.title));
+    div.appendChild(btnComplete);
+    div.appendChild(btnDelete);
+    div.id = task.id;
+
+    tasksList.appendChild(div);
+  })
+
 }
 
-tasksList.onclick = deleteTask;
+const allTasks = document.getElementById('filter__all');
+
+allTasks.onclick = () => {
+  tasksList.innerHTML = null;
+  tasksArray.forEach(task => {
+    const div = document.createElement('div');
+    const btnDelete = document.createElement('button');
+    const btnComplete = document.createElement('button');
+    btnDelete.appendChild(document.createTextNode('delete'));
+    btnComplete.appendChild(document.createTextNode('complete'));
+
+    div.classList.add('border', 'rounded', 'd-flex', 'justify-content-between', 'p-2', 'mt-2');
+    btnComplete.classList.add('btn', 'btn-sm', 'btn-success');
+    btnDelete.classList.add('btn', 'btn-sm', 'btn-danger');
+    div.appendChild(document.createTextNode(task.title));
+    div.appendChild(btnComplete);
+    div.appendChild(btnDelete);
+    div.id = task.id;
+
+    tasksList.appendChild(div);
+  })
+
+}
+
+deleteCompleted.onclick = () => {
+  const filteredArray = tasksArray.filter(task => task.isCompleted === true);
+  filteredArray.forEach(task => {
+    const taskToDelete = document.getElementById(task.id);
+    tasksList.removeChild(taskToDelete);
+  })
+}
