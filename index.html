@@ -10,7 +10,7 @@
   <body>
     <header>
       <div class="container">
-        <div class="row justify-content-center my-5">
+        <div class="row justify-content-center my-4">
           <h1 class="text-center">TODOS</h1>
         </div>
       </div>	
@@ -18,21 +18,25 @@
     <main>
       <div class="container">
         <div class="row justify-content-center">
-          <form id="task__form" class="col-6 p-5 bg-secondary border rounded text-center">
-            <input class="form-control" type="text" id="task__title" placeholder="What needs to be done">
+          <form id="task__form" class="col-7 text-center">
+            <input class="form-control shadow-sm" type="text" id="task__title" placeholder="What needs to be done?">
           </form>
         </div>
         <div class="row justify-content-center">
-          <div id="tasks__list" class="border rounded p-5 col-7">
+          <div id="tasks__list" class="col-7">
           </div>
-          <div class="my-3 col-7 text-center d-flex border rounded p-2 justify-content-between">
-            <div>
-              <span class="ml-2" id="counter"></span>
+          <div id="button__holder" class="d-none">
+            <div class="d-flex border rounded justify-content-between p-2">
+              <div class="flex-grow-1">
+                <span id="counter"></span><span id="counter__text" class="inline-block mx-2">items left</span>
+              </div>
+              <div class="flex-grow-1">
+                <button id="filter__all" class="btn btn-outline-secondary btn-sm">All</button>
+                <button id="filter__active" class="btn btn-outline-secondary btn-sm">Active</button>
+                <button id="filter__completed" class="btn btn-outline-secondary btn-sm">Completed</button>
+              </div>
+              <button id="delete__completed" class="d-none">Clear completed</button>
             </div>
-            <button id="filter__all" class="btn btn-outline-secondary btn-sm">All</button>
-            <button id="filter__active" class="btn btn-outline-secondary btn-sm">Active</button>
-            <button id="filter__completed" class="btn btn-outline-secondary btn-sm">Completed</button>
-            <button id="delete__completed" class="d-none">Clear completed</button>
           </div>
         </div>
     </main>
